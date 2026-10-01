@@ -17,6 +17,28 @@ import 'package:flutter/material.dart';
 import '../model/product.dart';
 import 'product_card.dart';
 
+class OneProductCardColumn extends StatelessWidget {
+  const OneProductCardColumn({required this.product, Key? key}) : super(key: key);
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      physics: const ClampingScrollPhysics(),
+      reverse: true,
+      children: <Widget>[
+        const SizedBox(
+          height: 40.0,
+        ),
+        ProductCard(
+          product: product,
+        ),
+      ],
+    );
+  }
+}
+
 class TwoProductCardColumn extends StatelessWidget {
   const TwoProductCardColumn({
     required this.bottom,
@@ -31,62 +53,95 @@ class TwoProductCardColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      const spacerHeight = 44.0;
+          const spacerHeight = 44.0;
 
-      double heightOfCards = (constraints.biggest.height - spacerHeight) / 2.0;
-      double heightOfImages = heightOfCards - ProductCard.kTextBoxHeight;
-      // TODO: Change imageAspectRatio calculation (104)
-      double imageAspectRatio = constraints.biggest.width / heightOfImages;
+          double heightOfCards = (constraints.biggest.height - spacerHeight) / 2.0;
+          double heightOfImages = heightOfCards - ProductCard.kTextBoxHeight;
+          double imageAspectRatio = heightOfImages >= 0.0
+              ? constraints.biggest.width / heightOfImages
+              : 49.0 / 33.0;
 
-      // TODO: Replace Column with a ListView (104)
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsetsDirectional.only(start: 28.0),
-            child: top != null
-                ? ProductCard(
-                    imageAspectRatio: imageAspectRatio,
-                    product: top!,
-                  )
-                : SizedBox(
-                    height: heightOfCards,
-                  ),
-          ),
-          const SizedBox(height: spacerHeight),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 28.0),
-            child: ProductCard(
-              imageAspectRatio: imageAspectRatio,
-              product: bottom,
-            ),
-          ),
-        ],
-      );
-    });
+          return ListView(
+            physics: const ClampingScrollPhysics(),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsetsDirectional.only(start: 28.0),
+                child: top != null
+                    ? ProductCard(
+                  imageAspectRatio: imageAspectRatio,
+                  product: top!,
+                )
+                    : SizedBox(
+                  height: heightOfCards,
+                ),
+              ),
+              const SizedBox(height: spacerHeight),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 28.0),
+                child: ProductCard(
+                  imageAspectRatio: imageAspectRatio,
+                  product: bottom,
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
 
-class OneProductCardColumn extends StatelessWidget {
-  const OneProductCardColumn({required this.product, Key? key})
-      : super(key: key);
+class ThreeProductCardColumn extends StatelessWidget {
+  const ThreeProductCardColumn({
+    required this.upper,
+    required this.middle,
+    required this.lower,
+    Key? key,
+  }) : super(key: key);
 
-  final Product product;
+  final Product upper;
+  final Product middle;
+  final Product lower;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace Column with a ListView (104)
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        ProductCard(
-          product: product,
-        ),
-        const SizedBox(
-          height: 40.0,
-        ),
-      ],
-    );
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          const spacerHeight = 44.0;
+
+          double heightOfCards =
+              (constraints.biggest.height - spacerHeight * 2) / 3.0;
+          double heightOfImages = heightOfCards - ProductCard.kTextBoxHeight;
+          double imageAspectRatio = heightOfImages >= 0.0
+              ? constraints.biggest.width / heightOfImages
+              : 49.0 / 33.0;
+
+          return ListView(
+            physics: const ClampingScrollPhysics(),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsetsDirectional.only(start: 28.0),
+                child: ProductCard(
+                  imageAspectRatio: imageAspectRatio,
+                  product: upper,
+                ),
+              ),
+              const SizedBox(height: spacerHeight),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 28.0),
+                child: ProductCard(
+                  imageAspectRatio: imageAspectRatio,
+                  product: middle,
+                ),
+              ),
+              const SizedBox(height: spacerHeight),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(start: 28.0),
+                child: ProductCard(
+                  imageAspectRatio: imageAspectRatio,
+                  product: lower,
+                ),
+              ),
+            ],
+          );
+        });
   }
 }
